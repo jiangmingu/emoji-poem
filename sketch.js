@@ -182,7 +182,8 @@ function changeImage() {
   console.log("change to:", newPath);
 
   loadImage(newPath, (newImg) => {
-    img = newImg;
+    img = cropToSquare(newImg);
+   
     img.resize(Grid_W, Grid_H);
     buildEmojiGrid();
     selectedText = "";
@@ -198,7 +199,7 @@ function saveImage() {
 function handleFile(file) {
   if (file.type === "image") {
     loadImage(file.data, function (newImg) {
-      img = newImg; //Replace the global img with the new one
+      img = cropToSquare(newImg); //Replace the global img with the new one
       img.resize(Grid_W, Grid_H);
       image(img, 0, 0, W, H);
       buildEmojiGrid();
@@ -218,5 +219,17 @@ function centerCanvas() {
 }
 function windowResized() {
   centerCanvas();  
+}
+function cropToSquare(srcImg) {
+  const side = min(srcImg.width, srcImg.height);
+
+
+  const sx = (srcImg.width - side) / 2;
+  const sy = (srcImg.height - side) / 2;
+
+
+  const squareImg = srcImg.get(sx, sy, side, side);
+
+  return squareImg;
 }
 
